@@ -3,17 +3,18 @@ package domain
 package io
 package app
 
-import cats._
-import cats.effect._
-import cats.implicits._
-import frdomain.ch6.domain.common._
-import frdomain.ch6.domain.model.account.AccountType._
-import frdomain.ch6.domain.model.account._
+import cats.*
+import cats.effect.*
+import cats.implicits.*
+import cats.mtl.Ask
+import frdomain.ch6.domain.common.*
+import frdomain.ch6.domain.model.account.*
+import frdomain.ch6.domain.model.account.AccountType.*
 import frdomain.ch6.domain.repository.AccountRepository
 import frdomain.ch6.domain.repository.interpreter.AccountRepositoryInMemory
-import frdomain.ch6.domain.service.interpreter._
+import frdomain.ch6.domain.service.interpreter.*
 import frdomain.ch6.domain.service.{AccountService, ReportingService}
-import squants.market._
+import squants.market.*
 
 object App extends IOApp {
 
@@ -38,13 +39,18 @@ object App extends IOApp {
   //  Data2 Errro :: java .lang.Exception: No existing account with no a2345
   //  Data3 Errro :: java .lang.Exception: Insufficient amount in a1234 to debit
   //  Data4 Errro :: java .lang.Exception: Account No has to be at least 5 characters long: found a134 / Interest rate - 0.9 must be > 0
-
+  // Result after scala3 migration
+  //  Data1 :: List((AccountNo(a1234), 1E+3 USD), (AccountNo(a2345), 2E+3 USD), (AccountNo(a4567), 4E+3 USD), (AccountNo(a3456), 3E+3 USD), (AccountNo(a5678), 0 USD))
+  //  Data2 Errro :: java.lang.Exception: No existing account with no AccountNo (a2345)
+  //  Data3 :: List((AccountNo(a1234), 6E+3 USD))
+  //  Data4 Errro :: java.lang.Exception: Account No has to be at least 5 characters long: found AccountNo (a134) / Interest rate -0.9 must be > 0
   object UseCase1 {
 
     def apply() = {
-      import Implicits._
+      import Implicits.*
       AccountRepositoryInMemory.make[IO].flatMap { repo =>
-        implicit val repositoryAsk = DefaultApplicativeAsk.constant[IO, AccountRepository[IO]](repo)
+        given repositoryAsk: Ask[IO, AccountRepository[IO]] = Ask.const[IO, AccountRepository[IO]](repo)
+
         program(new AccountServiceInterpreter[IO], new ReportingServiceInterpreter[IO])
       }
     }
@@ -52,8 +58,8 @@ object App extends IOApp {
     def program[F[_]](accountService: AccountService[F, Account, Amount, Balance], reportingService: ReportingService[F, Amount])
                      (implicit me: MonadError[F, AppException]): F[Seq[(AccountNo, Money)]] = {
 
-      import accountService._
-      import reportingService._
+      import accountService.*
+      import reportingService.*
 
       val opens =
         for {
@@ -85,9 +91,10 @@ object App extends IOApp {
   object UseCase2 {
 
     def apply() = {
-      import Implicits._
+      import Implicits.*
       AccountRepositoryInMemory.make[IO].flatMap { repo =>
-        implicit val repositoryAsk = DefaultApplicativeAsk.constant[IO, AccountRepository[IO]](repo)
+        given repositoryAsk: Ask[IO, AccountRepository[IO]] = Ask.const[IO, AccountRepository[IO]](repo)
+
         program(new AccountServiceInterpreter[IO], new ReportingServiceInterpreter[IO])
       }
     }
@@ -95,8 +102,8 @@ object App extends IOApp {
     def program[F[_]](accountService: AccountService[F, Account, Amount, Balance], reportingService: ReportingService[F, Amount])
                      (implicit me: MonadError[F, AppException]): F[Seq[(AccountNo, Money)]] = {
 
-      import accountService._
-      import reportingService._
+      import accountService.*
+      import reportingService.*
 
       for {
         _ <- open(AccountNo("a1234"), AccountName("a1name"), None, None, Checking)
@@ -109,9 +116,10 @@ object App extends IOApp {
   object UseCase3 {
 
     def apply() = {
-      import Implicits._
+      import Implicits.*
       AccountRepositoryInMemory.make[IO].flatMap { repo =>
-        implicit val repositoryAsk = DefaultApplicativeAsk.constant[IO, AccountRepository[IO]](repo)
+        given repositoryAsk: Ask[IO, AccountRepository[IO]] = Ask.const[IO, AccountRepository[IO]](repo)
+
         program(new AccountServiceInterpreter[IO], new ReportingServiceInterpreter[IO])
       }
     }
@@ -119,8 +127,8 @@ object App extends IOApp {
     def program[F[_]](accountService: AccountService[F, Account, Amount, Balance], reportingService: ReportingService[F, Amount])
                      (implicit me: MonadError[F, AppException]): F[Seq[(AccountNo, Money)]] = {
 
-      import accountService._
-      import reportingService._
+      import accountService.*
+      import reportingService.*
 
       for {
         _ <- open(AccountNo("a1234"), AccountName("a1name"), None, None, Checking)
@@ -134,9 +142,10 @@ object App extends IOApp {
   object UseCase4 {
 
     def apply() = {
-      import Implicits._
+      import Implicits.*
       AccountRepositoryInMemory.make[IO].flatMap { repo =>
-        implicit val repositoryAsk = DefaultApplicativeAsk.constant[IO, AccountRepository[IO]](repo)
+        given repositoryAsk: Ask[IO, AccountRepository[IO]] = Ask.const[IO, AccountRepository[IO]](repo)
+
         program(new AccountServiceInterpreter[IO], new ReportingServiceInterpreter[IO])
       }
     }
@@ -144,8 +153,8 @@ object App extends IOApp {
     def program[F[_]](accountService: AccountService[F, Account, Amount, Balance], reportingService: ReportingService[F, Amount])
                      (implicit me: MonadError[F, AppException]): F[Seq[(AccountNo, Money)]] = {
 
-      import accountService._
-      import reportingService._
+      import accountService.*
+      import reportingService.*
 
       for {
         a <- open(AccountNo("a134"), AccountName("a1name"), Some(BigDecimal(-0.9)), None, Savings)

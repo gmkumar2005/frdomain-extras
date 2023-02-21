@@ -13,7 +13,7 @@ import common._
 import model.account.AccountNo
 
 class ReportingServiceInterpreter[M[+_]]
-  (implicit E: MonadError[M, AppException], A: ApplicativeAsk[M, AccountRepository[M]]) 
+  (implicit E: MonadError[M, AppException], A: Ask[M, AccountRepository[M]])
     extends ReportingService[M, Amount] {
 
   def balanceByAccount: M[Seq[(AccountNo, Money)]] = for {

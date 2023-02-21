@@ -17,7 +17,7 @@ import AccountType._
 import repository.AccountRepository
 
 class AccountServiceInterpreter[M[_]: MonadAppException]
-  (implicit A: ApplicativeAsk[M, AccountRepository[M]]) extends AccountService[M, Account, Amount, Balance] {
+  (implicit A: Ask[M, AccountRepository[M]]) extends AccountService[M, Account, Amount, Balance] {
 
   val E = implicitly[MonadAppException[M]]
 
@@ -84,7 +84,7 @@ class AccountServiceInterpreter[M[_]: MonadAppException]
     repo           <- A.ask
     maybeAccount   <- repo.query(no).ensureOr(_ => NonExistingAccount(no))(_.isDefined) 
     multiplier = if (debitCredit == D) (-1) else 1
-    account        <- createOrUpdate(repo, Account.updateBalance(maybeAccount.get, multiplier * amount))
+    account        <- createOrUpdate(repo, Account.updateBalance(maybeAccount.get, amount))
 
   } yield account
 
