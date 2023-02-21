@@ -3,6 +3,8 @@
 .metals/readonly/scala/Predef.scala
 .bloop
 .metals
+.bsp
+.idea
 project/.bloop
 target/
 core/target/
