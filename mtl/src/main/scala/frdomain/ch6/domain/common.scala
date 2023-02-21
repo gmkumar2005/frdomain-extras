@@ -1,11 +1,11 @@
-package frdomain.ch6
-package domain
+package frdomain.ch6.domain
+
+import cats.*
+import cats.data.*
+import cats.implicits.*
+import cats.instances.all.*
 
 import java.time.LocalDateTime
-import cats._
-import cats.data._
-import cats.implicits._
-import cats.instances.all._
 
 object common {
   type Amount = BigDecimal
@@ -13,6 +13,6 @@ object common {
   type ErrorOr[A] = Either[NonEmptyChain[String], A]
   type MonadAppException[F[_]] = MonadError[F, AppException]
 
-  def today = LocalDateTime.now  
+  def today = LocalDateTime.now
 }
 

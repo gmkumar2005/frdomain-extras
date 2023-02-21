@@ -1,5 +1,4 @@
-package frdomain.ch6
-package domain
+package frdomain.ch6.domain
 
 import cats.data.NonEmptyChain
 

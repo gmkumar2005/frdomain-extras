@@ -1,22 +1,20 @@
-package frdomain.ch6
-package domain
-package model
+package frdomain.ch6.domain.model
+
 
 import cats.*
 import cats.data.*
 import cats.implicits.*
 import cats.instances.all.*
+import enumeratum.*
+import enumeratum.EnumEntry.*
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.string.{Uuid, ValidBigDecimal}
 import eu.timepit.refined.types.string.NonEmptyString
+import frdomain.ch6.domain.common.*
+import squants.market.*
 
 import java.time.LocalDateTime
 import scala.language.postfixOps
-//import _root_.io.estatico.newtype.macros.newtype
-import enumeratum.*
-import enumeratum.EnumEntry.*
-import frdomain.ch6.domain.common.*
-import squants.market.*
 
 object account {
 

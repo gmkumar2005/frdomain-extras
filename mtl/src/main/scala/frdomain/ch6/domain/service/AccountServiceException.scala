@@ -1,11 +1,10 @@
-package frdomain.ch6
-package domain
-package service
+package frdomain.ch6.domain.service
 
-import cats._
-import cats.data._
-import cats.instances.all._
-import model.account.AccountNo
+import cats.*
+import cats.data.*
+import cats.instances.all.*
+import frdomain.ch6.domain.AppException
+import frdomain.ch6.domain.model.account.AccountNo
 
 trait AccountServiceException extends AppException
 

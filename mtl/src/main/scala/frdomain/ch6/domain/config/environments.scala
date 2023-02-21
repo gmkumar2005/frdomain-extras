@@ -1,5 +1,4 @@
-package frdomain.ch6.domain
-package config
+package frdomain.ch6.domain.config
 
 import enumeratum._
 import enumeratum.EnumEntry._

@@ -1,12 +1,10 @@
-package frdomain.ch6
-package domain
-package io
-package app
+package frdomain.ch6.domain.io.app
 
 import cats.*
 import cats.effect.*
 import cats.implicits.*
 import cats.mtl.Ask
+import frdomain.ch6.domain.AppException
 import frdomain.ch6.domain.common.*
 import frdomain.ch6.domain.model.account.*
 import frdomain.ch6.domain.model.account.AccountType.*
